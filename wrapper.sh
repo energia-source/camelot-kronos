@@ -48,9 +48,9 @@ export CURL
 trap runner SIGINT SIGQUIT SIGTERM
 
 AUTHORIZATION=$($CURL -k -s -X POST -F "email=$ENVIRONMENT_PLANNER_USERNAME" -F "password=$ENVIRONMENT_PLANNER_PASSWORD" https://login.energia-europa.com/api/iam/user/login | $JQ -r .authorization)
-RESPONSE=$($CURL -k -X POST -H "x-authorization: $AUTHORIZATION" "$ENVIRONMENT_PLANNER_APIQUEUE" | $JQ -rc .)
+RESPONSE=$($CURL -k -s -X POST -H "x-authorization: $AUTHORIZATION" "$ENVIRONMENT_PLANNER_APIQUEUE" | $JQ -rc .)
 STATUS=$($JQ -rc .status <<< $RESPONSE)
-[[ ${#STATUS} != true ]] && exit 0
+[[ $STATUS != true ]] && exit 0
 
 readarray -t PLANNED < <($JQ -r .data[] <<< $RESPONSE)
 for ID in "${PLANNED[@]}"; do
