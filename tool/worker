@@ -3,7 +3,7 @@
 source $TOOL/argument "$@"
 
 AUTHORIZATION=$($CURL -k -s -X POST -F "email=$ENVIRONMENT_PLANNER_USERNAME" -F "password=$ENVIRONMENT_PLANNER_PASSWORD" https://login.energia-europa.com/api/iam/user/login | $JQ -r .authorization)
-RESPONSE=$($CURL -k -X POST -H "x-authorization: $AUTHORIZATION" "https://higeco.paolo.sviluppo.energia-europa.com/api/alarm/planner/send/$ID" | $JQ -rc .)
+RESPONSE=$($CURL -k -X POST -H "x-authorization: $AUTHORIZATION" "$ENVIRONMENT_PLANNER_APIXSEND/$ID" | $JQ -rc .)
 STATUS=$($JQ -rc .status <<< $RESPONSE)
 [[ $STATUS != true ]] && exit 0
 

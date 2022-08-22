@@ -25,6 +25,14 @@ if ! [ -v ENVIRONMENT_PLANNER_PASSWORD ] ; then
     RESPONSE+=("environment: Specifies the password.")
 fi
 
+if ! [ -v ENVIRONMENT_PLANNER_APIQUEUE ] ; then
+    RESPONSE+=("environment: Specifies the API to obtain queue.")
+fi
+
+if ! [ -v ENVIRONMENT_PLANNER_APIXSEND ] ; then
+    RESPONSE+=("environment: Specifies the API to perform e-mail send from a specific planner id.")
+fi
+
 if [ ${#RESPONSE[@]} -ne 0 ] ; then
     printf '%s\n' "${RESPONSE[@]}"
     runner
@@ -40,7 +48,7 @@ export CURL
 trap runner SIGINT SIGQUIT SIGTERM
 
 AUTHORIZATION=$($CURL -k -s -X POST -F "email=$ENVIRONMENT_PLANNER_USERNAME" -F "password=$ENVIRONMENT_PLANNER_PASSWORD" https://login.energia-europa.com/api/iam/user/login | $JQ -r .authorization)
-RESPONSE=$($CURL -k -X POST -H "x-authorization: $AUTHORIZATION" "https://higeco.paolo.sviluppo.energia-europa.com/api/alarm/planner/queue" | $JQ -rc .)
+RESPONSE=$($CURL -k -X POST -H "x-authorization: $AUTHORIZATION" "$ENVIRONMENT_PLANNER_APIQUEUE" | $JQ -rc .)
 STATUS=$($JQ -rc .status <<< $RESPONSE)
 [[ ${#STATUS} != true ]] && exit 0
 
