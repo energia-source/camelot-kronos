@@ -8,7 +8,7 @@ STATUS=$($JQ -rc .status <<< $RESPONSE)
 [[ $STATUS != true ]] && exit 0
 
 EMAIL=$($JQ -rc .email <<< $RESPONSE)
-if [ $EMAIL != true ]; then
+if [ $EMAIL != true ] ; then
     echo "The report $ID not send to recipient.";
     exit 1
 fi

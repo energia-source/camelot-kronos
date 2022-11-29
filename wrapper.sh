@@ -61,7 +61,7 @@ done
 
 while sleep 8; do
     ps aux | grep "$WORKER" | grep -v grep > /dev/null
-    if [[ $? -ne 0 ]]; then
+    if [[ $? -ne 0 ]] ; then
         break
     fi
 done
